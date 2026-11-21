@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -11,12 +9,13 @@ Route::get('/', function () {
 
 Route::resource('investments', InvestmentController::class)
     ->except(['show']);
-=======
-<?php
-
-use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('dashboard');
 });
->>>>>>> fc0fbcb10070660af2117c0368f3c04dda0fadaf
+
+Route::view('/dashboard', 'dashboard')
+    ->name('dashboard');
+
+Route::resource('investments', InvestmentController::class)
+    ->except(['show']);

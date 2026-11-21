@@ -5,41 +5,43 @@
 
 @section('content')
 
-<div class="card shadow-sm">
-    <div class="card-header bg-warning">
-        <h5 class="mb-0">Edit Data Investasi</h5>
-    </div>
+<div class="mb-4">
+    <h3 class="fw-bold text-maroon">Edit Investasi</h3>
+    <p class="text-muted">Perbarui informasi data investasi.</p>
+</div>
 
-    <div class="card-body">
+<div class="card card-custom p-4">
 
-        @if($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-        <form action="{{ route('investments.update', $investment->id) }}"
-              method="POST">
+    <form action="{{ route('investments.update', $investment->id) }}"
+          method="POST">
 
-            @csrf
-            @method('PUT')
+        @csrf
+        @method('PUT')
 
-            <div class="mb-3">
-                <label class="form-label">Nama Produk</label>
+        <div class="row g-3">
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Nama Produk</label>
                 <input type="text" name="nama_produk"
                        class="form-control"
                        value="{{ old('nama_produk', $investment->nama_produk) }}"
                        required>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Jenis Reksa Dana</label>
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Jenis Reksa Dana</label>
                 <select name="jenis_reksa_dana" class="form-select" required>
-                    @foreach(['Pasar Uang', 'Pendapatan Tetap', 'Saham', 'Campuran'] as $jenis)
+                    @foreach(['Pasar Uang','Pendapatan Tetap','Saham','Campuran'] as $jenis)
                         <option value="{{ $jenis }}"
                             {{ old('jenis_reksa_dana', $investment->jenis_reksa_dana) == $jenis ? 'selected' : '' }}>
                             {{ $jenis }}
@@ -48,49 +50,57 @@
                 </select>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Manajer Investasi</label>
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Manajer Investasi</label>
                 <input type="text" name="manajer_investasi"
                        class="form-control"
                        value="{{ old('manajer_investasi', $investment->manajer_investasi) }}"
                        required>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Tanggal Pembelian</label>
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Tanggal Pembelian</label>
                 <input type="date" name="tanggal_pembelian"
                        class="form-control"
                        value="{{ old('tanggal_pembelian', $investment->tanggal_pembelian->format('Y-m-d')) }}"
                        required>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Jumlah Unit</label>
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Jumlah Unit</label>
                 <input type="number" name="jumlah_unit"
                        class="form-control" step="0.0001" min="0.0001"
                        value="{{ old('jumlah_unit', $investment->jumlah_unit) }}"
                        required>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Harga Per Unit (Rp)</label>
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Harga Per Unit (Rp)</label>
                 <input type="number" name="harga_per_unit"
                        class="form-control" step="0.01" min="0"
                        value="{{ old('harga_per_unit', $investment->harga_per_unit) }}"
                        required>
             </div>
 
-            <button type="submit" class="btn btn-warning">
-                Update Data
-            </button>
+        </div>
+
+        <hr class="my-4">
+
+        <div class="d-flex gap-2 justify-content-end">
 
             <a href="{{ route('investments.index') }}"
                class="btn btn-secondary">
                 Batal
             </a>
 
-        </form>
-    </div>
+            <button type="submit" class="btn btn-maroon">
+                <i class="bi bi-check-circle"></i> Update Data
+            </button>
+
+        </div>
+
+    </form>
+
 </div>
 
 @endsection

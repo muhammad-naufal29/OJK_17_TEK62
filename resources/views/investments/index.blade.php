@@ -1,90 +1,360 @@
 
 @extends('layouts.app')
 
-@section('title', 'Data Investasi')
-
 @section('content')
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h3>Data Investasi</h3>
-        <p class="text-muted">Daftar pengelolaan investasi dan reksa dana</p>
+<div class="container-fluid">
+
+    {{-- HEADER HALAMAN --}}
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+
+        <div>
+            <h3 class="fw-bold mb-1">Data Investasi</h3>
+            <p class="text-muted mb-0">
+                Kelola data pembelian reksa dana
+            </p>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+
+            {{-- DROPDOWN EKSPOR --}}
+            <div class="dropdown">
+
+                <button class="btn btn-maroon dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+
+                    <i class="bi bi-download me-1"></i>
+                    Ekspor
+
+                </button>
+
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+
+                    {{-- EKSPOR PDF --}}
+                    <li>
+                        {{-- TODO: Integrasi route ekspor PDF --}}
+                        <a class="dropdown-item" href="#">
+                            <i class="bi bi-file-earmark-pdf me-2 text-danger"></i>
+                            Ekspor PDF
+                        </a>
+                    </li>
+
+                    {{-- EKSPOR EXCEL --}}
+                    <li>
+                        {{-- TODO: Integrasi route ekspor Excel --}}
+                        <a class="dropdown-item" href="#">
+                            <i class="bi bi-file-earmark-excel me-2 text-success"></i>
+                            Ekspor Excel
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            {{-- DROPDOWN IMPOR --}}
+            <div class="dropdown">
+
+                <button class="btn btn-maroon dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+
+                    <i class="bi bi-upload me-1"></i>
+                    Impor
+
+                </button>
+
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+
+                    {{-- IMPOR EXCEL --}}
+                    <li>
+                        {{-- TODO: Integrasi route impor Excel --}}
+                        <a class="dropdown-item" href="#">
+                            <i class="bi bi-file-earmark-excel me-2 text-success"></i>
+                            Impor Excel
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            {{-- TOMBOL TAMBAH INVESTASI --}}
+            <a href="{{ route('investments.create') }}"
+               class="btn btn-maroon">
+
+                <i class="bi bi-plus-circle me-1"></i>
+                Tambah Investasi
+
+            </a>
+
+        </div>
+
     </div>
 
-    <a href="{{ route('investments.create') }}"
-       class="btn btn-primary">
-        + Tambah Investasi
-    </a>
-</div>
 
-@if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
+    {{-- NOTIFIKASI SUKSES --}}
+    @if (session('success'))
+
+        <div class="alert alert-success alert-dismissible fade show"
+             role="alert">
+
+            <i class="bi bi-check-circle me-2"></i>
+            {{ session('success') }}
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+
+    @endif
+
+
+    {{-- NOTIFIKASI ERROR --}}
+    @if ($errors->any())
+
+        <div class="alert alert-danger">
+
+            <strong>Terjadi kesalahan:</strong>
+
+            <ul class="mb-0 mt-2">
+
+                @foreach ($errors->all() as $error)
+
+                    <li>{{ $error }}</li>
+
+                @endforeach
+
+            </ul>
+
+        </div>
+
+    @endif
+
+
+    {{-- TABEL DATA INVESTASI --}}
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-light">
+
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Produk</th>
+                            <th>Jenis Reksa Dana</th>
+                            <th>Manajer Investasi</th>
+                            <th>Tanggal Pembelian</th>
+                            <th>Jumlah Unit</th>
+                            <th>Total Investasi</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @forelse ($investments as $investment)
+
+                            <tr>
+
+                                <td>{{ $loop->iteration }}</td>
+
+                                <td class="fw-semibold">
+                                    {{ $investment->nama_produk }}
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-light text-dark">
+                                        {{ $investment->jenis_reksa_dana }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    {{ $investment->manajer_investasi }}
+                                </td>
+
+                                <td>
+                                    {{ \Carbon\Carbon::parse($investment->tanggal_pembelian)->format('d-m-Y') }}
+                                </td>
+
+                                <td>
+                                    {{ number_format((float) $investment->jumlah_unit, 4, ',', '.') }}
+                                </td>
+
+                                <td class="fw-semibold">
+                                    Rp {{ number_format((float) $investment->total_investasi, 0, ',', '.') }}
+                                </td>
+
+
+                                {{-- AKSI EDIT DAN HAPUS --}}
+                                <td class="text-center">
+
+                                    <div class="d-flex justify-content-center gap-2">
+
+                                        {{-- TOMBOL EDIT --}}
+                                        <a href="{{ route('investments.edit', $investment->id) }}"
+                                           class="btn btn-danger btn-sm"
+                                           title="Edit data">
+
+                                            <i class="bi bi-pencil-square"></i>
+
+                                        </a>
+
+
+                                        {{-- TOMBOL HAPUS --}}
+                                        <button type="button"
+                                                class="btn btn-danger btn-sm"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteModal{{ $investment->id }}"
+                                                title="Hapus data">
+
+                                            <i class="bi bi-trash"></i>
+
+                                        </button>
+
+                                    </div>
+
+
+                                    {{-- MODAL KONFIRMASI HAPUS --}}
+                                    <div class="modal fade"
+                                         id="deleteModal{{ $investment->id }}"
+                                         tabindex="-1"
+                                         aria-labelledby="deleteModalLabel{{ $investment->id }}"
+                                         aria-hidden="true">
+
+                                        <div class="modal-dialog modal-dialog-centered">
+
+                                            <div class="modal-content border-0 shadow">
+
+                                                <div class="modal-body text-center p-4">
+
+                                                    <div class="mb-3">
+
+                                                        <i class="bi bi-exclamation-circle-fill"
+                                                           style="font-size: 55px; color: #781F36;">
+                                                        </i>
+
+                                                    </div>
+
+
+                                                    <h5 class="fw-bold mb-2"
+                                                        style="color: #781F36;">
+
+                                                        Hapus Data Investasi?
+
+                                                    </h5>
+
+
+                                                    <p class="text-muted mb-4">
+
+                                                        Apakah kamu yakin ingin menghapus data produk
+
+                                                        <strong>
+                                                            {{ $investment->nama_produk }}
+                                                        </strong>?
+
+                                                        <br>
+
+                                                        Data yang sudah dihapus tidak dapat dikembalikan.
+
+                                                    </p>
+
+
+                                                    <div class="d-flex justify-content-center gap-2">
+
+                                                        {{-- TOMBOL BATAL --}}
+                                                        <button type="button"
+                                                                class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">
+
+                                                            Batal
+
+                                                        </button>
+
+
+                                                        {{-- FORM HAPUS --}}
+                                                        <form action="{{ route('investments.destroy', $investment->id) }}"
+                                                              method="POST">
+
+                                                            @csrf
+                                                            @method('DELETE')
+
+                                                            <button type="submit"
+                                                                    class="btn text-white"
+                                                                    style="background-color: #781F36;">
+
+                                                                <i class="bi bi-trash me-1"></i>
+                                                                Ya, Hapus
+
+                                                            </button>
+
+                                                        </form>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+
+                        @empty
+
+                            <tr>
+
+                                <td colspan="8" class="text-center py-5">
+
+                                    <i class="bi bi-inbox text-muted"
+                                       style="font-size: 45px;">
+                                    </i>
+
+                                    <p class="text-muted mt-2 mb-0">
+                                        Belum ada data investasi.
+                                    </p>
+
+                                    <a href="{{ route('investments.create') }}"
+                                       class="btn btn-maroon btn-sm mt-3">
+
+                                        Tambah Data Pertama
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        @endforelse
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
     </div>
-@endif
 
-<div class="card shadow-sm">
-    <div class="card-body table-responsive">
-
-        <table class="table table-bordered table-striped align-middle">
-
-            <thead class="table-primary">
-                <tr>
-                    <th>No</th>
-                    <th>Nama Produk</th>
-                    <th>Jenis Reksa Dana</th>
-                    <th>Manajer Investasi</th>
-                    <th>Tanggal Pembelian</th>
-                    <th>Total Investasi</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @forelse($investments as $investment)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $investment->nama_produk }}</td>
-                        <td>{{ $investment->jenis_reksa_dana }}</td>
-                        <td>{{ $investment->manajer_investasi }}</td>
-                        <td>{{ $investment->tanggal_pembelian->format('d-m-Y') }}</td>
-
-                        <td>
-                            Rp {{ number_format($investment->total_investasi, 0, ',', '.') }}
-                        </td>
-
-                        <td>
-                            <a href="{{ route('investments.edit', $investment->id) }}"
-                               class="btn btn-warning btn-sm">
-                                Edit
-                            </a>
-
-                            <form action="{{ route('investments.destroy', $investment->id) }}"
-                                  method="POST"
-                                  class="d-inline"
-                                  onsubmit="return confirm('Yakin ingin menghapus data ini?')">
-
-                                @csrf
-                                @method('DELETE')
-
-                                <button type="submit" class="btn btn-danger btn-sm">
-                                    Hapus
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="7" class="text-center">
-                            Belum ada data investasi.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-
-        </table>
-
-    </div>
 </div>
 
 @endsection
