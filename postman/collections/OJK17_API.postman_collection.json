@@ -1,0 +1,432 @@
+{
+	"info": {
+		"_postman_id": "c9f2a1b3-4d5e-6f78-90ab-cdef12345678",
+		"name": "OJK17 - Investasi Reksa Dana API",
+		"description": "Collection untuk testing endpoint Investasi Reksa Dana. Server Laravel harus berjalan di http://127.0.0.1:8000.\n\nPre-request Script otomatis mengambil token CSRF dari halaman /investments/create, jadi setiap request POST/PUT/DELETE tidak perlu setting token manual.\n\nCatatan: Endpoint ini adalah route web (middleware CSRF), bukan API JSON. Response POST/PUT/DELETE berupa redirect 302 atau HTML.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "0",
+		"_collection_link": ""
+	},
+	"item": [
+		{
+			"name": "1. GET Dashboard",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/dashboard",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"dashboard"
+					]
+				},
+				"description": "Menampilkan halaman dashboard."
+			},
+			"response": []
+		},
+		{
+			"name": "2. GET Daftar Investasi",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/investments",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"investments"
+					]
+				},
+				"description": "Menampilkan daftar semua investasi."
+			},
+			"response": []
+		},
+		{
+			"name": "3. POST - Simpan Investasi Baru",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.sendRequest(\"http://127.0.0.1:8000/investments/create\", function (err, res) {",
+							"    const match = res.text().match(/name=\"_token\" value=\"([^\"]+)\"/);",
+							"    if (match) {",
+							"        pm.variables.set(\"csrf_token\", match[1]);",
+							"    }",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "_token",
+							"value": "{{csrf_token}}",
+							"type": "text"
+						},
+						{
+							"key": "nama_produk",
+							"value": "Bibit Reksa Dana A",
+							"type": "text"
+						},
+						{
+							"key": "jenis_reksa_dana",
+							"value": "Saham",
+							"type": "text",
+							"description": "Pilihan: Pasar Uang | Pendapatan Tetap | Saham | Campuran"
+						},
+						{
+							"key": "manajer_investasi",
+							"value": "PT Manajer X",
+							"type": "text"
+						},
+						{
+							"key": "tanggal_pembelian",
+							"value": "2026-11-22",
+							"type": "text"
+						},
+						{
+							"key": "jumlah_unit",
+							"value": "1000.5",
+							"type": "text"
+						},
+						{
+							"key": "harga_per_unit",
+							"value": "1250",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/investments",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"investments"
+					]
+				},
+				"description": "Menyimpan data investasi baru.\n\nField valid:\n- nama_produk: required, string, max 255\n- jenis_reksa_dana: required, salah satu: Pasar Uang | Pendapatan Tetap | Saham | Campuran\n- manajer_investasi: required, string, max 255\n- tanggal_pembelian: required, date\n- jumlah_unit: required, numeric, min 0.0001\n- harga_per_unit: required, numeric, min 0\n\ntotal_investasi dihitung otomatis = jumlah_unit x harga_per_unit"
+			},
+			"response": []
+		},
+		{
+			"name": "4. GET Form Edit Investasi",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/investments/1/edit",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"investments",
+						"1",
+						"edit"
+					]
+				},
+				"description": "Menampilkan form edit untuk investasi dengan id=1. Ganti angka 1 dengan id investasi yang ingin diedit."
+			},
+			"response": []
+		},
+		{
+			"name": "5. PUT - Update Investasi",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.sendRequest(\"http://127.0.0.1:8000/investments/1/edit\", function (err, res) {",
+							"    const match = res.text().match(/name=\"_token\" value=\"([^\"]+)\"/);",
+							"    if (match) {",
+							"        pm.variables.set(\"csrf_token\", match[1]);",
+							"    }",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "_token",
+							"value": "{{csrf_token}}",
+							"type": "text"
+						},
+						{
+							"key": "_method",
+							"value": "PUT",
+							"type": "text"
+						},
+						{
+							"key": "nama_produk",
+							"value": "Bibit Reksa Dana A (Updated)",
+							"type": "text"
+						},
+						{
+							"key": "jenis_reksa_dana",
+							"value": "Saham",
+							"type": "text",
+							"description": "Pilihan: Pasar Uang | Pendapatan Tetap | Saham | Campuran"
+						},
+						{
+							"key": "manajer_investasi",
+							"value": "PT Manajer X Updated",
+							"type": "text"
+						},
+						{
+							"key": "tanggal_pembelian",
+							"value": "2026-11-22",
+							"type": "text"
+						},
+						{
+							"key": "jumlah_unit",
+							"value": "2000",
+							"type": "text"
+						},
+						{
+							"key": "harga_per_unit",
+							"value": "1500",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/investments/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"investments",
+						"1"
+					]
+				},
+				"description": "Mengupdate data investasi dengan id=1. Ganti angka 1 di URL dengan id investasi yang ingin diupdate.\n\nField sama seperti POST."
+			},
+			"response": []
+		},
+		{
+			"name": "6. DELETE - Hapus Investasi",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.sendRequest(\"http://127.0.0.1:8000/investments\", function (err, res) {",
+							"    const match = res.text().match(/name=\"_token\" value=\"([^\"]+)\"/);",
+							"    if (match) {",
+							"        pm.variables.set(\"csrf_token\", match[1]);",
+							"    }",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "_token",
+							"value": "{{csrf_token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/investments/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"investments",
+						"1"
+					]
+				},
+				"description": "Menghapus data investasi dengan id=1. Ganti angka 1 di URL dengan id investasi yang ingin dihapus."
+			},
+			"response": []
+		},
+		{
+			"name": "7. GET Export Excel",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/investments/export-excel",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"investments",
+						"export-excel"
+					]
+				},
+				"description": "Download file Excel berisi semua data investasi. Di Postman klik tombol 'Send and Download' untuk menyimpan file .xlsx."
+			},
+			"response": []
+		},
+		{
+			"name": "8. POST Import Excel",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.sendRequest(\"http://127.0.0.1:8000/investments\", function (err, res) {",
+							"    const match = res.text().match(/name=\"_token\" value=\"([^\"]+)\"/);",
+							"    if (match) {",
+							"        pm.variables.set(\"csrf_token\", match[1]);",
+							"    }",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "_token",
+							"value": "{{csrf_token}}",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/investments/import-excel",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"investments",
+						"import-excel"
+					]
+				},
+				"description": "Import data investasi dari file Excel (.xlsx/.xls).\n\nCara pakai:\n1. Klik tab Body\n2. Di field 'file' (type File), klik 'Select File' dan pilih file Excel\n3. Pastikan struktur kolom sesuai: nama_produk, jenis_reksa_dana, manajer_investasi, tanggal_pembelian, jumlah_unit, harga_per_unit\n4. Klik Send"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "csrf_token",
+			"value": ""
+		}
+	]
+}
