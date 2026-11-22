@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('content')
@@ -43,8 +42,7 @@
 
                     {{-- EKSPOR EXCEL --}}
                     <li>
-                        {{-- TODO: Integrasi route ekspor Excel --}}
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="{{ route('investments.exportExcel') }}">
                             <i class="bi bi-file-earmark-excel me-2 text-success"></i>
                             Ekspor Excel
                         </a>
@@ -72,11 +70,13 @@
 
                     {{-- IMPOR EXCEL --}}
                     <li>
-                        {{-- TODO: Integrasi route impor Excel --}}
-                        <a class="dropdown-item" href="#">
+                        <button type="button"
+                                class="dropdown-item"
+                                data-bs-toggle="modal"
+                                data-bs-target="#importExcelModal">
                             <i class="bi bi-file-earmark-excel me-2 text-success"></i>
                             Impor Excel
-                        </a>
+                        </button>
                     </li>
 
                 </ul>
@@ -350,6 +350,58 @@
                 </table>
 
             </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{{-- MODAL IMPOR EXCEL --}}
+<div class="modal fade"
+     id="importExcelModal"
+     tabindex="-1"
+     aria-labelledby="importExcelModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow">
+
+            <form action="{{ route('investments.import') }}"
+                  method="POST"
+                  enctype="multipart/form-data">
+
+                @csrf
+
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="importExcelModalLabel">
+                        <i class="bi bi-file-earmark-excel me-2 text-success"></i>
+                        Impor Data Excel
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <label for="fileExcel" class="form-label">Pilih File Excel (.xlsx / .xls)</label>
+                    <input type="file"
+                           id="fileExcel"
+                           name="file"
+                           accept=".xlsx,.xls"
+                           class="form-control"
+                           required>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-maroon">
+                        <i class="bi bi-upload me-1"></i>
+                        Upload & Impor
+                    </button>
+                </div>
+
+            </form>
 
         </div>
 
