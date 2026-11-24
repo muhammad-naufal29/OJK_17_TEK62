@@ -31,15 +31,7 @@
 
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm">
 
-                    {{-- EKSPOR PDF --}}
-                    <li>
-                        {{-- TODO: Integrasi route ekspor PDF --}}
-                        <a class="dropdown-item" href="#">
-                            <i class="bi bi-file-earmark-pdf me-2 text-danger"></i>
-                            Ekspor PDF
-                        </a>
-                    </li>
-
+                    
                     {{-- EKSPOR EXCEL --}}
                     <li>
                         <a class="dropdown-item" href="{{ route('investments.exportExcel') }}">
@@ -384,6 +376,16 @@
                 </div>
 
                 <div class="modal-body">
+                    <div class="mb-3 p-3 bg-light rounded border">
+                        <small class="text-muted d-block mb-2">
+                            Gunakan template Excel berikut agar format kolom sesuai dengan sistem:
+                        </small>
+                        <a href="{{ route('investments.template') }}" class="btn btn-sm btn-outline-success">
+                            <i class="bi bi-download me-1"></i>
+                            Download Template Excel (.xlsx)
+                        </a>
+                    </div>
+
                     <label for="fileExcel" class="form-label">Pilih File Excel (.xlsx / .xls)</label>
                     <input type="file"
                            id="fileExcel"

@@ -13,6 +13,11 @@ Route::get('/', function () {
 Route::view('/dashboard', 'dashboard')
     ->name('dashboard');
 
+// Download Template Excel
+Route::get('/investments/template-excel',
+    [ReportController::class, 'downloadTemplate']
+)->name('investments.template');
+
 // Import Excel
 Route::post('/investments/import-excel',
     [ReportController::class, 'importExcel']
