@@ -1,0 +1,7 @@
+$kind: http-request
+description: Menampilkan form edit untuk investasi dengan id=1. Ganti angka 1 dengan id investasi yang ingin diedit.
+url: http://127.0.0.1:8000/investments/1/edit
+method: GET
+headers:
+  Accept: application/json
+order: 4000

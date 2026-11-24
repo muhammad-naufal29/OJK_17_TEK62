@@ -1,0 +1,34 @@
+$kind: http-request
+description: |-
+  Import data investasi dari file Excel (.xlsx/.xls).
+
+  Cara pakai:
+  1. Klik tab Body
+  2. Di field 'file' (type File), klik 'Select File' dan pilih file Excel
+  3. Pastikan struktur kolom sesuai: nama_produk, jenis_reksa_dana, manajer_investasi, tanggal_pembelian, jumlah_unit, harga_per_unit
+  4. Klik Send
+url: http://127.0.0.1:8000/investments/import-excel
+method: POST
+headers:
+  Accept: application/json
+body:
+  type: formdata
+  content:
+    - type: text
+      key: _token
+      value: "{{csrf_token}}"
+    - type: file
+      key: file
+      src:
+        - ""
+scripts:
+  - type: beforeRequest
+    code: |-
+      pm.sendRequest("http://127.0.0.1:8000/investments", function (err, res) {
+          const match = res.text().match(/name="_token" value="([^"]+)"/);
+          if (match) {
+              pm.variables.set("csrf_token", match[1]);
+          }
+      });
+    language: text/javascript
+order: 8000

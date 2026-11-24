@@ -1,0 +1,46 @@
+$kind: http-request
+description: |-
+  Menyimpan data investasi baru.
+
+  Field valid:
+  - nama_produk: required, string, max 255
+  - jenis_reksa_dana: required, salah satu: Pasar Uang | Pendapatan Tetap | Saham | Campuran
+  - manajer_investasi: required, string, max 255
+  - tanggal_pembelian: required, date
+  - jumlah_unit: required, numeric, min 0.0001
+  - harga_per_unit: required, numeric, min 0
+
+  total_investasi dihitung otomatis = jumlah_unit x harga_per_unit
+url: http://127.0.0.1:8000/investments
+method: POST
+headers:
+  Accept: application/json
+body:
+  type: urlencoded
+  content:
+    - key: _token
+      value: "{{csrf_token}}"
+    - key: nama_produk
+      value: Bibit Reksa Dana A
+    - key: jenis_reksa_dana
+      value: Saham
+      description: "Pilihan: Pasar Uang | Pendapatan Tetap | Saham | Campuran"
+    - key: manajer_investasi
+      value: PT Manajer X
+    - key: tanggal_pembelian
+      value: 2026-11-22
+    - key: jumlah_unit
+      value: "1000.5"
+    - key: harga_per_unit
+      value: "1250"
+scripts:
+  - type: beforeRequest
+    code: |-
+      pm.sendRequest("http://127.0.0.1:8000/investments/create", function (err, res) {
+          const match = res.text().match(/name="_token" value="([^"]+)"/);
+          if (match) {
+              pm.variables.set("csrf_token", match[1]);
+          }
+      });
+    language: text/javascript
+order: 3000

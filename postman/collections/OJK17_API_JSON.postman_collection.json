@@ -1,0 +1,185 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "OJK17 - API JSON (Investasi Reksa Dana)",
+		"description": "Collection API JSON untuk endpoint Investasi Reksa Dana.\n\nServer: http://127.0.0.1:8000\nPrefix: /api\n\nKEUNGGULAN:\n- Tidak perlu CSRF token\n- Response selalu JSON\n- Bisa kirim raw JSON langsung\n\nBase URL variable: {{base_url}} = http://127.0.0.1:8000",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "0",
+		"_collection_link": ""
+	},
+	"item": [
+		{
+			"name": "0. Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/ping",
+					"protocol": "http",
+					"host": ["127", "0", "0", "1"],
+					"port": "8000",
+					"path": ["api", "ping"]
+				},
+				"description": "Cek apakah API berjalan."
+			},
+			"response": []
+		},
+		{
+			"name": "1. GET - Daftar Investasi",
+			"request": {
+				"method": "GET",
+				"header": [
+					{ "key": "Accept", "value": "application/json", "type": "text" }
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/investments",
+					"protocol": "http",
+					"host": ["127", "0", "0", "1"],
+					"port": "8000",
+					"path": ["api", "investments"]
+				},
+				"description": "Menampilkan semua data investasi dalam format JSON."
+			},
+			"response": []
+		},
+		{
+			"name": "2. GET - Detail Investasi",
+			"request": {
+				"method": "GET",
+				"header": [
+					{ "key": "Accept", "value": "application/json", "type": "text" }
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/investments/1",
+					"protocol": "http",
+					"host": ["127", "0", "0", "1"],
+					"port": "8000",
+					"path": ["api", "investments", "1"]
+				},
+				"description": "Menampilkan detail satu investasi berdasarkan ID. Ganti angka 1 dengan ID yang diinginkan."
+			},
+			"response": []
+		},
+		{
+			"name": "3. POST - Tambah Investasi",
+			"request": {
+				"method": "POST",
+				"header": [
+					{ "key": "Accept", "value": "application/json", "type": "text" },
+					{ "key": "Content-Type", "value": "application/json", "type": "text" }
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nama_produk\": \"Bibit Reksa Dana A\",\n    \"jenis_reksa_dana\": \"Saham\",\n    \"manajer_investasi\": \"PT Manajer X\",\n    \"tanggal_pembelian\": \"2026-11-24\",\n    \"jumlah_unit\": 1000.5,\n    \"harga_per_unit\": 1250\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/investments",
+					"protocol": "http",
+					"host": ["127", "0", "0", "1"],
+					"port": "8000",
+					"path": ["api", "investments"]
+				},
+				"description": "Menambah data investasi baru.\n\nBody (raw JSON):\n- nama_produk: string (required, max 255)\n- jenis_reksa_dana: 'Pasar Uang' | 'Pendapatan Tetap' | 'Saham' | 'Campuran' (required)\n- manajer_investasi: string (required, max 255)\n- tanggal_pembelian: date YYYY-MM-DD (required)\n- jumlah_unit: numeric (required, min 0.0001)\n- harga_per_unit: numeric (required, min 0)\n\ntotal_investasi dihitung otomatis = jumlah_unit x harga_per_unit"
+			},
+			"response": []
+		},
+		{
+			"name": "4. PUT - Update Investasi",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{ "key": "Accept", "value": "application/json", "type": "text" },
+					{ "key": "Content-Type", "value": "application/json", "type": "text" }
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nama_produk\": \"Bibit Reksa Dana A (Updated)\",\n    \"jenis_reksa_dana\": \"Saham\",\n    \"manajer_investasi\": \"PT Manajer X Updated\",\n    \"tanggal_pembelian\": \"2026-11-24\",\n    \"jumlah_unit\": 2000,\n    \"harga_per_unit\": 1500\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/investments/1",
+					"protocol": "http",
+					"host": ["127", "0", "0", "1"],
+					"port": "8000",
+					"path": ["api", "investments", "1"]
+				},
+				"description": "Mengupdate data investasi berdasarkan ID. Ganti angka 1 di URL dengan ID yang diinginkan. Body sama seperti POST."
+			},
+			"response": []
+		},
+		{
+			"name": "5. DELETE - Hapus Investasi",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{ "key": "Accept", "value": "application/json", "type": "text" }
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/investments/1",
+					"protocol": "http",
+					"host": ["127", "0", "0", "1"],
+					"port": "8000",
+					"path": ["api", "investments", "1"]
+				},
+				"description": "Menghapus data investasi berdasarkan ID. Ganti angka 1 dengan ID yang diinginkan."
+			},
+			"response": []
+		},
+		{
+			"name": "6. GET - Export Excel",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/investments/export-excel",
+					"protocol": "http",
+					"host": ["127", "0", "0", "1"],
+					"port": "8000",
+					"path": ["api", "investments", "export-excel"]
+				},
+				"description": "Download file Excel (.xlsx) berisi semua data investasi. Di Postman klik 'Send and Download'."
+			},
+			"response": []
+		},
+		{
+			"name": "7. POST - Import Excel",
+			"request": {
+				"method": "POST",
+				"header": [
+					{ "key": "Accept", "value": "application/json", "type": "text" }
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{ "key": "file", "type": "file", "src": "" }
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/investments/import-excel",
+					"protocol": "http",
+					"host": ["127", "0", "0", "1"],
+					"port": "8000",
+					"path": ["api", "investments", "import-excel"]
+				},
+				"description": "Import data dari file Excel.\n\n1. Pilih Body → form-data\n2. Key 'file' → pilih type File → klik Select File\n3. Format kolom: nama_produk, jenis_reksa_dana, manajer_investasi, tanggal_pembelian, jumlah_unit, harga_per_unit\n4. Klik Send"
+			},
+			"response": []
+		},
+		{
+			"name": "8. GET - Template Excel",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/investments/template-excel",
+					"protocol": "http",
+					"host": ["127", "0", "0", "1"],
+					"port": "8000",
+					"path": ["api", "investments", "template-excel"]
+				},
+				"description": "Download template Excel untuk import data. Di Postman klik 'Send and Download'."
+			},
+			"response": []
+		}
+	],
+	"variable": []
+}

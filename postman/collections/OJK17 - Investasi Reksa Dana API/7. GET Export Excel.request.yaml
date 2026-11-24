@@ -1,0 +1,7 @@
+$kind: http-request
+description: Download file Excel berisi semua data investasi. Di Postman klik tombol 'Send and Download' untuk menyimpan file .xlsx.
+url: http://127.0.0.1:8000/investments/export-excel
+method: GET
+headers:
+  Accept: application/json
+order: 7000

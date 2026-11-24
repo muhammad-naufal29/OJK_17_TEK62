@@ -1,0 +1,9 @@
+$kind: collection
+description: |-
+  Collection untuk testing endpoint Investasi Reksa Dana. Server Laravel harus berjalan di http://127.0.0.1:8000.
+
+  Pre-request Script otomatis mengambil token CSRF dari halaman /investments/create, jadi setiap request POST/PUT/DELETE tidak perlu setting token manual.
+
+  Catatan: Endpoint ini adalah route web (middleware CSRF), bukan API JSON. Response POST/PUT/DELETE berupa redirect 302 atau HTML.
+variables:
+  csrf_token: ""
