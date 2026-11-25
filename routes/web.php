@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InvestmentController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\DashboardController;
 
 // Halaman utama diarahkan ke Dashboard
 Route::get('/', function () {
@@ -10,13 +11,8 @@ Route::get('/', function () {
 });
 
 // Dashboard
-Route::view('/dashboard', 'dashboard')
+Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
-
-// Download Template Excel
-Route::get('/investments/template-excel',
-    [ReportController::class, 'downloadTemplate']
-)->name('investments.template');
 
 // Import Excel
 Route::post('/investments/import-excel',
@@ -31,3 +27,5 @@ Route::get('/investments/export-excel',
 // CRUD Investasi
 Route::resource('investments', InvestmentController::class)
     ->except(['show']);
+
+Route::get('/investments/template', [InvestmentController::class, 'template'])->name('investments.template');
