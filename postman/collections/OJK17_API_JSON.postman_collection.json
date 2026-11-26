@@ -1,185 +1,317 @@
 {
 	"info": {
-		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-		"name": "OJK17 - API JSON (Investasi Reksa Dana)",
-		"description": "Collection API JSON untuk endpoint Investasi Reksa Dana.\n\nServer: http://127.0.0.1:8000\nPrefix: /api\n\nKEUNGGULAN:\n- Tidak perlu CSRF token\n- Response selalu JSON\n- Bisa kirim raw JSON langsung\n\nBase URL variable: {{base_url}} = http://127.0.0.1:8000",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "0",
-		"_collection_link": ""
+		"_postman_id": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+		"name": "OJK17 - API JSON Investasi Reksa Dana (Sanctum)",
+		"description": "Collection API JSON untuk Sistem Informasi Investasi Reksa Dana.\n\n### Cara pakai\n1. Jalankan request **Auth > Login** (atau **Auth > Register**). Token akan otomatis tersimpan ke variable koleksi.\n2. Semua request lain otomatis memakai header `Authorization: Bearer {{token}}`.\n3. Ganti `base_url` jika server berjalan di host/port lain.\n\n### Info\n- Server lokal: http://127.0.0.1:8000\n- Prefix API: /api\n- Autentikasi: Laravel Sanctum (Bearer Token) - tanpa CSRF\n- Response: JSON",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
 	},
 	"item": [
 		{
-			"name": "0. Health Check",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://127.0.0.1:8000/api/ping",
-					"protocol": "http",
-					"host": ["127", "0", "0", "1"],
-					"port": "8000",
-					"path": ["api", "ping"]
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const res = pm.response.json();",
+									"if (res && res.data && res.data.token) {",
+									"    pm.collectionVariables.set('token', res.data.token);",
+									"    console.log('Token berhasil disimpan.');",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": { "type": "noauth" },
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Naufal\",\n    \"email\": \"naufal@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "register"]
+						},
+						"description": "Mendaftarkan user baru. Password minimal 8 karakter dan wajib mengirim `password_confirmation` yang sama."
+					}
 				},
-				"description": "Cek apakah API berjalan."
-			},
-			"response": []
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const res = pm.response.json();",
+									"if (res && res.data && res.data.token) {",
+									"    pm.collectionVariables.set('token', res.data.token);",
+									"    console.log('Token berhasil disimpan.');",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": { "type": "noauth" },
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"naufal@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login"]
+						},
+						"description": "Login dan mengambil token. Token otomatis disimpan ke variable koleksi `token`."
+					}
+				},
+				{
+					"name": "Me (Profil Saya)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/auth/me",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "me"]
+						},
+						"description": "Menampilkan data user yang sedang login (butuh token)."
+					}
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/auth/logout",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "logout"]
+						},
+						"description": "Menghapus token yang sedang dipakai (butuh token)."
+					}
+				}
+			]
 		},
 		{
-			"name": "1. GET - Daftar Investasi",
-			"request": {
-				"method": "GET",
-				"header": [
-					{ "key": "Accept", "value": "application/json", "type": "text" }
-				],
-				"url": {
-					"raw": "http://127.0.0.1:8000/api/investments",
-					"protocol": "http",
-					"host": ["127", "0", "0", "1"],
-					"port": "8000",
-					"path": ["api", "investments"]
-				},
-				"description": "Menampilkan semua data investasi dalam format JSON."
-			},
-			"response": []
+			"name": "Dashboard",
+			"item": [
+				{
+					"name": "Statistik Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/stats",
+							"host": ["{{base_url}}"],
+							"path": ["api", "dashboard", "stats"]
+						},
+						"description": "Statistik dashboard: total investasi, jumlah produk, jumlah jenis reksa dana, total unit, serta data grafik bulanan dan per kategori."
+					}
+				}
+			]
 		},
 		{
-			"name": "2. GET - Detail Investasi",
-			"request": {
-				"method": "GET",
-				"header": [
-					{ "key": "Accept", "value": "application/json", "type": "text" }
-				],
-				"url": {
-					"raw": "http://127.0.0.1:8000/api/investments/1",
-					"protocol": "http",
-					"host": ["127", "0", "0", "1"],
-					"port": "8000",
-					"path": ["api", "investments", "1"]
+			"name": "Investasi",
+			"item": [
+				{
+					"name": "Daftar Investasi",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/investments",
+							"host": ["{{base_url}}"],
+							"path": ["api", "investments"]
+						},
+						"description": "Menampilkan seluruh data investasi."
+					}
 				},
-				"description": "Menampilkan detail satu investasi berdasarkan ID. Ganti angka 1 dengan ID yang diinginkan."
-			},
-			"response": []
+				{
+					"name": "Detail Investasi",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/investments/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "investments", "1"]
+						},
+						"description": "Menampilkan satu data investasi berdasarkan ID. Ganti angka 1 sesuai ID."
+					}
+				},
+				{
+					"name": "Tambah Investasi",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nama_produk\": \"Bibit Reksa Dana A\",\n    \"jenis_reksa_dana\": \"Saham\",\n    \"manajer_investasi\": \"PT Manajer X\",\n    \"tanggal_pembelian\": \"2026-11-26\",\n    \"jumlah_unit\": 1000.5,\n    \"harga_per_unit\": 1250\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/investments",
+							"host": ["{{base_url}}"],
+							"path": ["api", "investments"]
+						},
+						"description": "Menambah data investasi baru.\n\n- `jenis_reksa_dana` harus salah satu dari: Pasar Uang, Pendapatan Tetap, Saham, Campuran\n- `total_investasi` dihitung otomatis (jumlah_unit x harga_per_unit)"
+					}
+				},
+				{
+					"name": "Update Investasi",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nama_produk\": \"Bibit Reksa Dana A (Updated)\",\n    \"jenis_reksa_dana\": \"Campuran\",\n    \"manajer_investasi\": \"PT Manajer X Updated\",\n    \"tanggal_pembelian\": \"2026-11-26\",\n    \"jumlah_unit\": 2000,\n    \"harga_per_unit\": 1500\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/investments/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "investments", "1"]
+						},
+						"description": "Memperbarui data investasi berdasarkan ID."
+					}
+				},
+				{
+					"name": "Hapus Investasi",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/investments/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "investments", "1"]
+						},
+						"description": "Menghapus data investasi berdasarkan ID."
+					}
+				},
+				{
+					"name": "Export Excel",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/investments/export-excel",
+							"host": ["{{base_url}}"],
+							"path": ["api", "investments", "export-excel"]
+						},
+						"description": "Mengunduh seluruh data investasi sebagai file .xlsx. Gunakan tombol **Send and Download**."
+					}
+				},
+				{
+					"name": "Template Excel",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/investments/template-excel",
+							"host": ["{{base_url}}"],
+							"path": ["api", "investments", "template-excel"]
+						},
+						"description": "Mengunduh template Excel untuk keperluan import. Gunakan tombol **Send and Download**."
+					}
+				},
+				{
+					"name": "Import Excel",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{ "key": "file", "type": "file", "src": "" }
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/investments/import-excel",
+							"host": ["{{base_url}}"],
+							"path": ["api", "investments", "import-excel"]
+						},
+						"description": "Import data investasi dari file Excel (.xlsx/.xls/.csv, maks 2 MB). Pilih file pada field `file`."
+					}
+				}
+			]
 		},
 		{
-			"name": "3. POST - Tambah Investasi",
-			"request": {
-				"method": "POST",
-				"header": [
-					{ "key": "Accept", "value": "application/json", "type": "text" },
-					{ "key": "Content-Type", "value": "application/json", "type": "text" }
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"nama_produk\": \"Bibit Reksa Dana A\",\n    \"jenis_reksa_dana\": \"Saham\",\n    \"manajer_investasi\": \"PT Manajer X\",\n    \"tanggal_pembelian\": \"2026-11-24\",\n    \"jumlah_unit\": 1000.5,\n    \"harga_per_unit\": 1250\n}"
-				},
-				"url": {
-					"raw": "http://127.0.0.1:8000/api/investments",
-					"protocol": "http",
-					"host": ["127", "0", "0", "1"],
-					"port": "8000",
-					"path": ["api", "investments"]
-				},
-				"description": "Menambah data investasi baru.\n\nBody (raw JSON):\n- nama_produk: string (required, max 255)\n- jenis_reksa_dana: 'Pasar Uang' | 'Pendapatan Tetap' | 'Saham' | 'Campuran' (required)\n- manajer_investasi: string (required, max 255)\n- tanggal_pembelian: date YYYY-MM-DD (required)\n- jumlah_unit: numeric (required, min 0.0001)\n- harga_per_unit: numeric (required, min 0)\n\ntotal_investasi dihitung otomatis = jumlah_unit x harga_per_unit"
-			},
-			"response": []
-		},
-		{
-			"name": "4. PUT - Update Investasi",
-			"request": {
-				"method": "PUT",
-				"header": [
-					{ "key": "Accept", "value": "application/json", "type": "text" },
-					{ "key": "Content-Type", "value": "application/json", "type": "text" }
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"nama_produk\": \"Bibit Reksa Dana A (Updated)\",\n    \"jenis_reksa_dana\": \"Saham\",\n    \"manajer_investasi\": \"PT Manajer X Updated\",\n    \"tanggal_pembelian\": \"2026-11-24\",\n    \"jumlah_unit\": 2000,\n    \"harga_per_unit\": 1500\n}"
-				},
-				"url": {
-					"raw": "http://127.0.0.1:8000/api/investments/1",
-					"protocol": "http",
-					"host": ["127", "0", "0", "1"],
-					"port": "8000",
-					"path": ["api", "investments", "1"]
-				},
-				"description": "Mengupdate data investasi berdasarkan ID. Ganti angka 1 di URL dengan ID yang diinginkan. Body sama seperti POST."
-			},
-			"response": []
-		},
-		{
-			"name": "5. DELETE - Hapus Investasi",
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{ "key": "Accept", "value": "application/json", "type": "text" }
-				],
-				"url": {
-					"raw": "http://127.0.0.1:8000/api/investments/1",
-					"protocol": "http",
-					"host": ["127", "0", "0", "1"],
-					"port": "8000",
-					"path": ["api", "investments", "1"]
-				},
-				"description": "Menghapus data investasi berdasarkan ID. Ganti angka 1 dengan ID yang diinginkan."
-			},
-			"response": []
-		},
-		{
-			"name": "6. GET - Export Excel",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://127.0.0.1:8000/api/investments/export-excel",
-					"protocol": "http",
-					"host": ["127", "0", "0", "1"],
-					"port": "8000",
-					"path": ["api", "investments", "export-excel"]
-				},
-				"description": "Download file Excel (.xlsx) berisi semua data investasi. Di Postman klik 'Send and Download'."
-			},
-			"response": []
-		},
-		{
-			"name": "7. POST - Import Excel",
-			"request": {
-				"method": "POST",
-				"header": [
-					{ "key": "Accept", "value": "application/json", "type": "text" }
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{ "key": "file", "type": "file", "src": "" }
-					]
-				},
-				"url": {
-					"raw": "http://127.0.0.1:8000/api/investments/import-excel",
-					"protocol": "http",
-					"host": ["127", "0", "0", "1"],
-					"port": "8000",
-					"path": ["api", "investments", "import-excel"]
-				},
-				"description": "Import data dari file Excel.\n\n1. Pilih Body → form-data\n2. Key 'file' → pilih type File → klik Select File\n3. Format kolom: nama_produk, jenis_reksa_dana, manajer_investasi, tanggal_pembelian, jumlah_unit, harga_per_unit\n4. Klik Send"
-			},
-			"response": []
-		},
-		{
-			"name": "8. GET - Template Excel",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://127.0.0.1:8000/api/investments/template-excel",
-					"protocol": "http",
-					"host": ["127", "0", "0", "1"],
-					"port": "8000",
-					"path": ["api", "investments", "template-excel"]
-				},
-				"description": "Download template Excel untuk import data. Di Postman klik 'Send and Download'."
-			},
-			"response": []
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "Ping (publik)",
+					"request": {
+						"auth": { "type": "noauth" },
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/ping",
+							"host": ["{{base_url}}"],
+							"path": ["api", "ping"]
+						},
+						"description": "Cek apakah API berjalan. Tidak butuh token."
+					}
+				}
+			]
 		}
 	],
-	"variable": []
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	]
 }

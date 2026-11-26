@@ -13,7 +13,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Rute API tidak memiliki halaman login, jadi untuk request ke /api/*
+        // kembalikan null agar ditangani sebagai respons 401 JSON
+        // (bukan dialihkan ke route('login') yang tidak tersedia).
+        $middleware->redirectGuestsTo(
+            fn (Request $request) => $request->is('api/*') ? null : route('login'),
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
