@@ -6,13 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Investment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardApiController extends Controller
 {
     // STATISTIK: Ringkasan dan data grafik dashboard investasi
     public function stats(): JsonResponse
     {
-        $investments = Investment::orderBy('tanggal_pembelian')->get();
+        $investments = Investment::where('user_id', Auth::id())
+            ->orderBy('tanggal_pembelian')
+            ->get();
 
         // Grafik investasi per bulan
         $monthly = $investments->groupBy(function ($item) {
@@ -45,7 +48,7 @@ class DashboardApiController extends Controller
                 'total_investasi' => (float) $investments->sum('total_investasi'),
                 'jumlah_produk'   => $investments->unique('nama_produk')->count(),
                 'jumlah_jenis'    => $investments->unique('jenis_reksa_dana')->count(),
-                'total_unit'      => (float) $investments->sum('jumlah_unit'),
+                'total_unit'      => round((float) $investments->sum('jumlah_unit'), 2),
                 'grafik_bulanan'  => [
                     'labels' => $labels,
                     'values' => $values,

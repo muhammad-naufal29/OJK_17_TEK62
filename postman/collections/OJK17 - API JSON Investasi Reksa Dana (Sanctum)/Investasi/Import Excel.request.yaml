@@ -1,0 +1,14 @@
+$kind: http-request
+description: Import data investasi dari file Excel (.xlsx/.xls/.csv, maks 2 MB). Pilih file pada field `file`.
+url: "{{base_url}}/api/investments/import-excel"
+method: POST
+headers:
+  Accept: application/json
+body:
+  type: formdata
+  content:
+    - type: file
+      key: file
+      src:
+        - ""
+order: 8000

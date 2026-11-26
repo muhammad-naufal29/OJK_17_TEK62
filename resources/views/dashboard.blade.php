@@ -69,7 +69,7 @@
                 <div>
                     <small class="text-muted">Total Unit</small>
                     <h5 class="fw-bold text-maroon mt-2">
-                        {{ number_format($totalUnit, 4, ',', '.') }} Unit
+                        {{ number_format($totalUnit, 2, ',', '.') }} Unit
                     </h5>
                 </div>
                 <i class="bi bi-layers fs-2 text-maroon"></i>

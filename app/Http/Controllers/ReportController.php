@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Investment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -69,6 +70,7 @@ class ReportController extends Controller
             $hargaPerUnit = (float) $row[5];
 
             Investment::create([
+                'user_id'           => Auth::id(),
                 'nama_produk'       => $row[0],
                 'jenis_reksa_dana'  => $row[1],
                 'manajer_investasi' => $row[2],
@@ -85,41 +87,47 @@ class ReportController extends Controller
     }
 
     // EXPORT EXCEL
+    // Format export SAMA PERSIS dengan template import supaya hasil export
+    // bisa langsung di-import kembali tanpa perubahan kolom.
     public function exportExcel()
     {
-        $investments = Investment::latest()->get();
+        $investments = Investment::where('user_id', Auth::id())
+            ->latest()
+            ->get();
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
+        // Header mengikuti format template import (6 kolom)
         $headers = [
-            'No',
-            'Nama Produk',
-            'Jenis Reksa Dana',
-            'Manajer Investasi',
-            'Tanggal Pembelian',
-            'Jumlah Unit',
-            'Harga Per Unit',
-            'Total Investasi',
+            'nama_produk',
+            'jenis_reksa_dana',
+            'manajer_investasi',
+            'tanggal_pembelian',
+            'jumlah_unit',
+            'harga_per_unit',
         ];
         $sheet->fromArray($headers, null, 'A1');
 
         $rowNumber = 2;
-        foreach ($investments as $index => $item) {
+        foreach ($investments as $item) {
             $sheet->fromArray([
-                $index + 1,
                 $item->nama_produk,
                 $item->jenis_reksa_dana,
                 $item->manajer_investasi,
-                $item->tanggal_pembelian,
-                $item->jumlah_unit,
-                $item->harga_per_unit,
-                $item->total_investasi,
+                $item->tanggal_pembelian->format('Y-m-d'),
+                (float) $item->jumlah_unit,
+                (float) $item->harga_per_unit,
             ], null, 'A' . $rowNumber);
             $rowNumber++;
         }
 
-        foreach (range('A', 'H') as $col) {
+        // Format kolom angka agar tidak pakai separator ribuan
+        $sheet->getStyle('E2:F' . $rowNumber)
+            ->getNumberFormat()
+            ->setFormatCode('0.00');
+
+        foreach (range('A', 'F') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 

@@ -1,0 +1,23 @@
+$kind: http-request
+description: |-
+  Menambah data investasi baru.
+
+  - `jenis_reksa_dana` harus salah satu dari: Pasar Uang, Pendapatan Tetap, Saham, Campuran
+  - `total_investasi` dihitung otomatis (jumlah_unit x harga_per_unit)
+url: "{{base_url}}/api/investments"
+method: POST
+headers:
+  Accept: application/json
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+        "nama_produk": "Bibit Reksa Dana A",
+        "jenis_reksa_dana": "Saham",
+        "manajer_investasi": "PT Manajer X",
+        "tanggal_pembelian": "2026-11-26",
+        "jumlah_unit": 1000.5,
+        "harga_per_unit": 1250
+    }
+order: 3000

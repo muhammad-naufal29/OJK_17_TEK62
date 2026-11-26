@@ -1,0 +1,9 @@
+$kind: http-request
+description: Cek apakah API berjalan. Tidak butuh token.
+url: "{{base_url}}/api/ping"
+method: GET
+headers:
+  Accept: application/json
+auth:
+  type: noauth
+order: 1000

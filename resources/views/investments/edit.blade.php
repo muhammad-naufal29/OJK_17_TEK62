@@ -69,7 +69,7 @@
             <div class="col-md-6">
                 <label class="form-label fw-semibold">Jumlah Unit</label>
                 <input type="number" name="jumlah_unit"
-                       class="form-control" step="0.0001" min="0.0001"
+                       class="form-control" step="0.01" min="0.01"
                        value="{{ old('jumlah_unit', $investment->jumlah_unit) }}"
                        required>
             </div>

@@ -49,7 +49,7 @@ Route::middleware('auth')->group(function () {
 
     // Template Excel
     Route::get('/investments/template',
-        [InvestmentController::class, 'template']
+        [ReportController::class, 'downloadTemplate']
     )->name('investments.template');
 
     // CRUD Investasi

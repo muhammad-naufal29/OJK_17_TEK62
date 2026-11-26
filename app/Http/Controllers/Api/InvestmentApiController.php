@@ -6,14 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\Investment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class InvestmentApiController extends Controller
 {
-    // READ: Menampilkan seluruh data investasi
+    // READ: Menampilkan data investasi milik user yang login
     public function index(): JsonResponse
     {
-        $investments = Investment::latest()->get();
+        $investments = Investment::where('user_id', Auth::id())
+            ->latest()
+            ->get();
 
         return response()->json([
             'success' => true,
@@ -22,10 +25,11 @@ class InvestmentApiController extends Controller
         ], 200);
     }
 
-    // READ: Menampilkan detail satu investasi
+    // READ: Menampilkan detail satu investasi (hanya milik user)
     public function show(int $id): JsonResponse
     {
-        $investment = Investment::find($id);
+        $investment = Investment::where('user_id', Auth::id())
+            ->find($id);
 
         if (!$investment) {
             return response()->json([
@@ -41,7 +45,7 @@ class InvestmentApiController extends Controller
         ], 200);
     }
 
-    // CREATE: Menyimpan data investasi
+    // CREATE: Menyimpan data investasi (terikat ke user yang login)
     public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -49,7 +53,7 @@ class InvestmentApiController extends Controller
             'jenis_reksa_dana'  => 'required|in:Pasar Uang,Pendapatan Tetap,Saham,Campuran',
             'manajer_investasi' => 'required|string|max:255',
             'tanggal_pembelian' => 'required|date',
-            'jumlah_unit'       => 'required|numeric|min:0.0001',
+            'jumlah_unit'       => 'required|numeric|min:0.01',
             'harga_per_unit'    => 'required|numeric|min:0',
         ]);
 
@@ -63,6 +67,7 @@ class InvestmentApiController extends Controller
 
         $validated = $validator->validated();
         $validated['total_investasi'] = $validated['jumlah_unit'] * $validated['harga_per_unit'];
+        $validated['user_id'] = Auth::id();
 
         $investment = Investment::create($validated);
 
@@ -73,10 +78,11 @@ class InvestmentApiController extends Controller
         ], 201);
     }
 
-    // UPDATE: Memperbarui data investasi
+    // UPDATE: Memperbarui data investasi (hanya milik user)
     public function update(Request $request, int $id): JsonResponse
     {
-        $investment = Investment::find($id);
+        $investment = Investment::where('user_id', Auth::id())
+            ->find($id);
 
         if (!$investment) {
             return response()->json([
@@ -90,7 +96,7 @@ class InvestmentApiController extends Controller
             'jenis_reksa_dana'  => 'required|in:Pasar Uang,Pendapatan Tetap,Saham,Campuran',
             'manajer_investasi' => 'required|string|max:255',
             'tanggal_pembelian' => 'required|date',
-            'jumlah_unit'       => 'required|numeric|min:0.0001',
+            'jumlah_unit'       => 'required|numeric|min:0.01',
             'harga_per_unit'    => 'required|numeric|min:0',
         ]);
 
@@ -114,10 +120,11 @@ class InvestmentApiController extends Controller
         ], 200);
     }
 
-    // DELETE: Menghapus data investasi
+    // DELETE: Menghapus data investasi (hanya milik user)
     public function destroy(int $id): JsonResponse
     {
-        $investment = Investment::find($id);
+        $investment = Investment::where('user_id', Auth::id())
+            ->find($id);
 
         if (!$investment) {
             return response()->json([

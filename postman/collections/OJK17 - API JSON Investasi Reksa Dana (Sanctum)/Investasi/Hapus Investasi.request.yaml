@@ -1,0 +1,7 @@
+$kind: http-request
+description: Menghapus data investasi berdasarkan ID.
+url: "{{base_url}}/api/investments/1"
+method: DELETE
+headers:
+  Accept: application/json
+order: 5000

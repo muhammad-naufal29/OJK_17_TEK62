@@ -1,0 +1,5 @@
+$kind: http-request
+description: Mengunduh template Excel untuk keperluan import. Gunakan tombol **Send and Download**.
+url: "{{base_url}}/api/investments/template-excel"
+method: GET
+order: 7000

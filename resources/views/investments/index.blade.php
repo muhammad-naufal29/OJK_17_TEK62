@@ -24,7 +24,7 @@
                         data-bs-toggle="dropdown"
                         aria-expanded="false">
 
-                    <i class="bi bi-download me-1"></i>
+                    <i class="bi bi-upload me-1"></i>
                     Ekspor
 
                 </button>
@@ -53,7 +53,7 @@
                         data-bs-toggle="dropdown"
                         aria-expanded="false">
 
-                    <i class="bi bi-upload me-1"></i>
+                    <i class="bi bi-download me-1"></i>
                     Impor
 
                 </button>
@@ -69,6 +69,14 @@
                             <i class="bi bi-file-earmark-excel me-2 text-success"></i>
                             Impor Excel
                         </button>
+                    </li>
+
+                    {{-- DOWNLOAD TEMPLATE EXCEL --}}
+                    <li>
+                        <a class="dropdown-item" href="{{ route('investments.template') }}">
+                            <i class="bi bi-download me-2 text-primary"></i>
+                            Template Excel
+                        </a>
                     </li>
 
                 </ul>
@@ -183,7 +191,7 @@
                                 </td>
 
                                 <td>
-                                    {{ number_format((float) $investment->jumlah_unit, 4, ',', '.') }}
+                                    {{ number_format((float) $investment->jumlah_unit, 2, ',', '.') }}
                                 </td>
 
                                 <td class="fw-semibold">

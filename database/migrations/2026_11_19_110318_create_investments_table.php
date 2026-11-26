@@ -11,6 +11,9 @@ return new class extends Migration
     {
         Schema::create('investments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')
+                ->constrained()
+                ->cascadeOnDelete();
             $table->string('nama_produk');
             $table->string('jenis_reksa_dana');
             $table->string('manajer_investasi');

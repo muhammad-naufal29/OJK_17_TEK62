@@ -1,0 +1,7 @@
+$kind: http-request
+description: Menampilkan satu data investasi berdasarkan ID. Ganti angka 1 sesuai ID.
+url: "{{base_url}}/api/investments/1"
+method: GET
+headers:
+  Accept: application/json
+order: 2000

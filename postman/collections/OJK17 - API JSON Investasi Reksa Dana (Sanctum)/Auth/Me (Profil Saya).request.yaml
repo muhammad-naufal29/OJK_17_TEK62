@@ -1,0 +1,7 @@
+$kind: http-request
+description: Menampilkan data user yang sedang login (butuh token).
+url: "{{base_url}}/api/auth/me"
+method: GET
+headers:
+  Accept: application/json
+order: 3000

@@ -1,0 +1,23 @@
+$kind: collection
+description: |-
+  Collection API JSON untuk Sistem Informasi Investasi Reksa Dana.
+
+  ### Cara pakai
+  1. Jalankan request **Auth > Login** (atau **Auth > Register**). Token akan otomatis tersimpan ke variable koleksi.
+  2. Semua request lain otomatis memakai header `Authorization: Bearer {{token}}`.
+  3. Ganti `base_url` jika server berjalan di host/port lain.
+
+  ### Info
+  - Server lokal: http://127.0.0.1:8000
+  - Prefix API: /api
+  - Autentikasi: Laravel Sanctum (Bearer Token) - tanpa CSRF
+  - Response: JSON
+variables:
+  base_url: http://127.0.0.1:8000
+  token: ""
+auth:
+  - id: a22317c8-04a8-43cc-93a7-af73ea456722
+    type: bearer
+    name: bearer auth
+    credentials:
+      token: "{{token}}"

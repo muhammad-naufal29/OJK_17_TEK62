@@ -1,0 +1,28 @@
+$kind: http-request
+description: Mendaftarkan user baru. Password minimal 8 karakter dan wajib mengirim `password_confirmation` yang sama.
+url: "{{base_url}}/api/auth/register"
+method: POST
+headers:
+  Accept: application/json
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+        "name": "Naufal",
+        "email": "naufal@example.com",
+        "password": "password123",
+        "password_confirmation": "password123"
+    }
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+      if (res && res.data && res.data.token) {
+          pm.collectionVariables.set('token', res.data.token);
+          console.log('Token berhasil disimpan.');
+      }
+    language: text/javascript
+order: 1000

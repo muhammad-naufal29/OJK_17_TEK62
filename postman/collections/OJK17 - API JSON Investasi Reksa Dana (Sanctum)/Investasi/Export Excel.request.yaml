@@ -1,0 +1,5 @@
+$kind: http-request
+description: Mengunduh seluruh data investasi sebagai file .xlsx. Gunakan tombol **Send and Download**.
+url: "{{base_url}}/api/investments/export-excel"
+method: GET
+order: 6000

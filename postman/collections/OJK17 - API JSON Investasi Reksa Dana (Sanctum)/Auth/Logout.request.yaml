@@ -1,0 +1,7 @@
+$kind: http-request
+description: Menghapus token yang sedang dipakai (butuh token).
+url: "{{base_url}}/api/auth/logout"
+method: POST
+headers:
+  Accept: application/json
+order: 4000

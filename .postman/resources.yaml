@@ -2,9 +2,12 @@
 workspace:
   id: b7928bce-4d14-4d09-8e03-84fe4e3c9249
 
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
 cloudResources:
   collections:
     ../postman/collections/OJK17 - Investasi Reksa Dana API: d083f1ba-e435-46e7-84a9-fdb88c250c5e
+    ../postman/collections/OJK17 - API JSON Investasi Reksa Dana (Sanctum): f475b3cc-9038-430f-b022-be6f148b939d
 
 # All resources in the `postman/` folder are automatically registered in Local View.
 # Point to additional files outside the `postman/` folder to register them individually. Example:

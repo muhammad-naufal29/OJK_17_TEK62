@@ -1,0 +1,19 @@
+$kind: http-request
+description: Memperbarui data investasi berdasarkan ID.
+url: "{{base_url}}/api/investments/1"
+method: PUT
+headers:
+  Accept: application/json
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+        "nama_produk": "Bibit Reksa Dana A (Updated)",
+        "jenis_reksa_dana": "Campuran",
+        "manajer_investasi": "PT Manajer X Updated",
+        "tanggal_pembelian": "2026-11-26",
+        "jumlah_unit": 2000,
+        "harga_per_unit": 1500
+    }
+order: 4000

@@ -1,0 +1,7 @@
+$kind: http-request
+description: Menampilkan seluruh data investasi.
+url: "{{base_url}}/api/investments"
+method: GET
+headers:
+  Accept: application/json
+order: 1000

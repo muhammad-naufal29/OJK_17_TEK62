@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Investment;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Mengambil seluruh data investasi
-        $investments = Investment::orderBy('tanggal_pembelian')
+        // Mengambil data investasi milik user yang login
+        $investments = Investment::where('user_id', Auth::id())
+            ->orderBy('tanggal_pembelian')
             ->get();
 
         // ==================================

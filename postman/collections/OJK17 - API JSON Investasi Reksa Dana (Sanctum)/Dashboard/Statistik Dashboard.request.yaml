@@ -1,0 +1,7 @@
+$kind: http-request
+description: "Statistik dashboard: total investasi, jumlah produk, jumlah jenis reksa dana, total unit, serta data grafik bulanan dan per kategori."
+url: "{{base_url}}/api/dashboard/stats"
+method: GET
+headers:
+  Accept: application/json
+order: 1000
