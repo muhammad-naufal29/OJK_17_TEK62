@@ -18,5 +18,14 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password123'),
             ]
         );
+
+        // Akun user biasa (non-admin).
+        User::updateOrCreate(
+            ['email' => 'user@ojk17.test'],
+            [
+                'name'     => 'User Biasa',
+                'password' => Hash::make('password123'),
+            ]
+        );
     }
 }

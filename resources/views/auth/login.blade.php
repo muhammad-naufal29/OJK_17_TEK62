@@ -61,6 +61,24 @@
             box-shadow: 0 0 0 .2rem rgba(169,68,91,.2);
         }
 
+        /* Input password dengan tombol reveal */
+        .input-group .form-control {
+            border-top-right-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+        }
+
+        .input-group .btn {
+            border-left: none;
+        }
+
+        .input-group .btn:hover,
+        .input-group .btn:focus,
+        .input-group .btn:active {
+            background: #f5dde3;
+            color: var(--maroon);
+            box-shadow: none;
+        }
+
         .btn-maroon {
             background: var(--maroon);
             color: white;
@@ -117,18 +135,28 @@
                        name="email"
                        value="{{ old('email') }}"
                        class="form-control"
-                       placeholder="admin@ojk17.test"
+                       placeholder="contoh@email.com"
                        required
                        autofocus>
             </div>
 
             <div class="mb-3">
                 <label class="form-label fw-semibold">Password</label>
-                <input type="password"
-                       name="password"
-                       class="form-control"
-                       placeholder="••••••••"
-                       required>
+                <div class="input-group">
+                    <input type="password"
+                           id="password"
+                           name="password"
+                           class="form-control"
+                           placeholder=""
+                           required>
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            id="togglePassword"
+                            title="Lihat/Sembunyikan password"
+                            style="border-top-right-radius:10px;border-bottom-right-radius:10px">
+                        <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="form-check mb-4">
@@ -147,7 +175,33 @@
             </button>
         </form>
 
+        <p class="text-center text-muted mt-4 mb-0" style="font-size:.9rem">
+            Belum punya akun?
+            <a href="{{ route('register') }}" class="fw-semibold text-maroon text-decoration-none">
+                Daftar di sini
+            </a>
+        </p>
+
     </div>
+
+    <script>
+        // Tombol reveal / hide password
+        const toggleBtn = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const toggleIcon = document.getElementById('togglePasswordIcon');
+
+        toggleBtn.addEventListener('click', function () {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('bi-eye');
+                toggleIcon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('bi-eye-slash');
+                toggleIcon.classList.add('bi-eye');
+            }
+        });
+    </script>
 
 </body>
 </html>

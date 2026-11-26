@@ -14,6 +14,13 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])
 Route::post('/login', [AuthController::class, 'login'])
     ->middleware('guest');
 
+Route::get('/register', [AuthController::class, 'showRegisterForm'])
+    ->middleware('guest')
+    ->name('register');
+
+Route::post('/register', [AuthController::class, 'register'])
+    ->middleware('guest');
+
 Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
