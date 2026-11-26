@@ -4,5 +4,17 @@
 /.github
 /tests
 /.env
+/.env.local
+/.env.*.local
 /CLAUDE.md
 /AGENTS.md
+/README.md
+/.postman
+/phpunit.xml
+
+# Node/Vite tidak dipakai di produksi (aset memakai CDN),
+# jadi package.json diabaikan agar Vercel tidak menjalankan "npm run build".
+/package.json
+/package-lock.json
+/vite.config.js
+/.npmrc

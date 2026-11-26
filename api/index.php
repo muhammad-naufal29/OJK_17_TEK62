@@ -25,6 +25,22 @@ foreach ($writableDirs as $dir) {
     }
 }
 
+// Database demo memakai SQLite. File databasenya ikut ter-deploy bersama kode,
+// lalu disalin ke /tmp (satu-satunya folder yang bisa ditulis di Vercel)
+// supaya aplikasi bisa membaca & menulis data.
+$bundledDb = __DIR__.'/../database/database.sqlite';
+$runtimeDb = '/tmp/database.sqlite';
+
+if (is_file($bundledDb) && ! is_file($runtimeDb)) {
+    @copy($bundledDb, $runtimeDb);
+}
+
+// Pastikan Laravel selalu memakai SQLite di /tmp, apa pun isi environment.
+$_ENV['DB_CONNECTION'] = $_SERVER['DB_CONNECTION'] = 'sqlite';
+$_ENV['DB_DATABASE'] = $_SERVER['DB_DATABASE'] = $runtimeDb;
+putenv('DB_CONNECTION=sqlite');
+putenv('DB_DATABASE='.$runtimeDb);
+
 // Biarkan Laravel menganggap dirinya diakses dari root, bukan dari /api.
 $_SERVER['SCRIPT_NAME'] = '/index.php';
 $_SERVER['SCRIPT_FILENAME'] = __DIR__.'/../public/index.php';

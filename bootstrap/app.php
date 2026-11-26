@@ -13,6 +13,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Vercel menyediakan HTTPS di depan aplikasi lewat proxy.
+        // Percayai semua proxy agar Laravel mengenali header X-Forwarded-Proto
+        // sehingga seluruh URL & redirect yang dihasilkan tetap https://
+        // (tanpa ini browser menandai form login & form lain "not secure").
+        $middleware->trustProxies(at: '*');
+
         // Rute API tidak memiliki halaman login, jadi untuk request ke /api/*
         // kembalikan null agar ditangani sebagai respons 401 JSON
         // (bukan dialihkan ke route('login') yang tidak tersedia).

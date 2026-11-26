@@ -221,12 +221,51 @@
                 </small>
             </div>
 
-            <div>
-                <i class="bi bi-person-circle fs-4 text-maroon"></i>
+            <div class="dropdown">
+                <button class="btn d-flex align-items-center gap-2 border-0"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    <i class="bi bi-person-circle fs-4 text-maroon"></i>
+                    <span class="fw-semibold text-dark">
+                        {{ auth()->user()->name ?? 'Pengguna' }}
+                    </span>
+                    <i class="bi bi-chevron-down text-muted"></i>
+                </button>
+
+                <ul class="dropdown-menu dropdown-menu-end shadow">
+                    <li>
+                        <span class="dropdown-item-text text-muted" style="font-size:.85rem">
+                            {{ auth()->user()->email ?? '' }}
+                        </span>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="dropdown-item text-danger fw-semibold">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </button>
+                        </form>
+                    </li>
+                </ul>
             </div>
         </header>
 
         <main class="content">
+
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             @yield('content')
         </main>
 
